@@ -11,7 +11,7 @@ const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await user.matchPassword(password))) {
-    const token = jwt.sign({ userid: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
 
@@ -45,7 +45,11 @@ const registerUser = asyncHandler(async (req, res) => {
 // @route   POST /api/users
 // @access  Private
 const LogoutUser = asyncHandler(async (req, res) => {
-  res.send("Logout User");
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+  res.status(200).json({ message: "logged out!" });
 });
 
 // @desc    get user profile
