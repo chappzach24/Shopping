@@ -21,12 +21,22 @@ const CartScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
+  const { userInfo } = useSelector((state) => state.auth);
+
   const addToCartHandler = async (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
   };
 
   const removeFromCartHandler = async (id) => {
     dispatch(removeFromCart(id));
+  };
+
+  const checkoutHandler = () => {
+    if (!userInfo) {
+      navigate('/login?redirect=/shipping');
+    } else {
+      navigate('/shipping');
+    }
   };
 
   return (
@@ -97,6 +107,7 @@ const CartScreen = () => {
                 type="button"
                 className="btn-block"
                 disabled={cartItems.length === 0}
+                onClick={checkoutHandler}
               >
                 Proceed to Checkout
               </Button>
